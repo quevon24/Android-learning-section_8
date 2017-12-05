@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.seccion8.seccion_08.Fragments.AlertsFragment;
@@ -33,6 +34,29 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.navview);
 
         setFragmentByDefault();
+
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            // Evento para conocer el estado del navigation drawer, abierto o cerrado
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                Toast.makeText(getApplicationContext(), "Opened", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                Toast.makeText(getApplicationContext(), "Closed", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -65,15 +89,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (fragmentTransaction) {
-                    getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
-                    // para resaltar el elemento del menu en el que estamos
-                    item.setChecked(true);
-                    // poner nuevo titulo en action bar
-                    getSupportActionBar().setTitle(item.getTitle());
-                    // cerrar el menu
+                    changeFragment(fragment, item);
                     drawerLayout.closeDrawers();
                 }
-
                 return true;
             }
         });
@@ -88,13 +106,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void  setFragmentByDefault() {
-        // Metodo para establecer fragment por default
-        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new EmailFragment()).commit();
-        // Marcar elemento email como seleccionado desde el inicio
-        MenuItem item = navigationView.getMenu().getItem(0);
+        changeFragment(new EmailFragment(), navigationView.getMenu().getItem(0));
+    }
+
+    private void changeFragment(Fragment fragment, MenuItem item) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, fragment).commit();
+        // para resaltar el elemento del menu en el que estamos
         item.setChecked(true);
-        // Añadir titulo a action bar
+        // poner nuevo titulo en action bar
         getSupportActionBar().setTitle(item.getTitle());
+        // cerrar el menu
+        drawerLayout.closeDrawers();
     }
 
     @Override
