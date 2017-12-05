@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navview);
 
+        setFragmentByDefault();
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             // Se recibe el elemento al que se le hace click
@@ -83,6 +85,16 @@ public class MainActivity extends AppCompatActivity {
         // Habilitar el icono alado de la barra y mostrarlo
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_home);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void  setFragmentByDefault() {
+        // Metodo para establecer fragment por default
+        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new EmailFragment()).commit();
+        // Marcar elemento email como seleccionado desde el inicio
+        MenuItem item = navigationView.getMenu().getItem(0);
+        item.setChecked(true);
+        // Añadir titulo a action bar
+        getSupportActionBar().setTitle(item.getTitle());
     }
 
     @Override
